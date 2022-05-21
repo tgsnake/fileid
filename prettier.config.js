@@ -6,4 +6,5 @@ module.exports = {
   useTabs: false,
   bracketSpacing: true,
   endOfLine: 'crlf',
+  proseWrap: 'never',
 };
