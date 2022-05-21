@@ -1,0 +1,34 @@
+{
+  "name": "@tgsnake/fileid",
+  "version": "1.0.0",
+  "description": "core framework for tgsnake for generating file id",
+  "main": "./lib/index.js",
+  "devDependencies": {
+    "@types/node": "17.0.35",
+    "prettier": "2.6.2",
+    "ts-node": "10.8.0",
+    "typescript": "4.6.4"
+  },
+  "scripts": {
+    "start": "node tes/index.js",
+    "build": "tsc",
+    "dev": "ts-node tes/index.ts",
+    "prepare": "tsc",
+    "prettier": "prettier -w ."
+  },
+  "homepage": "https://tgsnake.js.org",
+  "keywords": [
+    "tgsnake",
+    "file id",
+    "telegram file id"
+  ],
+  "access": "public",
+  "bugs": "https://github.com/tgsnake/fileid/issues",
+  "repository": "https://github.com/tgsnake/fileid",
+  "author": "butthx",
+  "files": [
+    "lib/**/**"
+  ],
+  "license": "MIT",
+  "packageManager": "yarn@3.2.1"
+}
