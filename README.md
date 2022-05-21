@@ -82,7 +82,7 @@ This options is using for generating unique file id or file id. Pass this option
 | stickerSetAccessHash | bigint | optional | The accessHash of that sticker set. BigInt(0) ot must be work when you doesn't have a accessHash of that sticker set. |  | thumbnailSource | enum/number of ThumbnailSource | optional | The enum/number of ThumbnailSource. recommended to use enum. |
 | thumbnailFileType | enum/number of FileType | optional | The enum/number of FileType. recommend to use enum. |
 | thumbnailSize | string | optional | The size of that thumbnail.<br/> see : https://core.telegram.org/api/files#image-thumbnail-types |
-| fileTypeUniqueId | enum/number of FileTypeUniqueId | Only for generating uniqueFileId. <br/> The enum/number of FileTypeUniqueId. recommended to use enum. |
+| fileTypeUniqueId | enum/number of FileTypeUniqueId | optional | Only for generating uniqueFileId. <br/> The enum/number of FileTypeUniqueId. recommended to use enum. |
 
 ### Enums
 
