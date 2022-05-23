@@ -5,7 +5,6 @@
 //
 // Tgsnake is a free software : you can redistribute it and/or modify
 //  it under the terms of the MIT License as published.
-import * as Util from 'node:util';
 import {
   FileType,
   ThumbnailSource,
@@ -336,7 +335,7 @@ export class FileId<CustomBigInt = bigint> {
     }
     return new FileId<bigint>();
   }
-  [Util.inspect.custom](): { [key: string]: any } {
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {};
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
