@@ -29,6 +29,36 @@ Another framework it should be can using this framework, **not only a tgsnake**.
 
   > We just tester for decoding file id from that framework, nvm work for re-sending the documents, but you can try. should be work too..
 
+## FAQ
+
+- **This framework is support for browser?**  
+  Sorry, we only support for nodejs, for browser support, may you will installing some dependencies for supporting `Buffer` class in browser.
+- **I use typescript with another BigInt framework, and i got a error, what should i do?**
+
+Try to pass type of that BigInt framework when you create a new Class.
+
+```typescript
+// example we have another framework for bigint like this :
+class myBigInt {
+  int!: bigint;
+  constructor(int: string | number) {
+    this.int = BigInt(int);
+  }
+  // this way only work when that bigint framework have a toString function.
+  toString() {
+    return String(this.int);
+  }
+}
+// then, we use it maybe like this :
+const int = new myBigInt(100);
+
+const fileId = new FileId<myBigInt>({
+  id: int,
+});
+```
+
+Or, you can convert that bigint number using `BigInt` (not using another framework).
+
 ## Installation
 
 Installing this framework with npm
@@ -65,24 +95,25 @@ This options is using for generating unique file id or file id. Pass this option
 <!-- prettier-ignore -->
 | field | type | required | description |
 | :------: | :-----: | :----: | :-----: | 
-| version | number | true | The major version of bot api file id. Usually is 4. |
-| subVersion | number | true | The minor version of bot api file id. Usually same with tdlib version or 32. |
-| dcId | number | true | The data center id, where that file is stored. |
-| fileType | enum/number of FileType | true | The enum/number of FileType. recommend to use enum. |
-| id | bigint | true | The id of file. |
-| accessHash | bigint | true | The hash to access that file. |
-| fileRefference | Buffer | optional | File reference of that file. |
-| url | string | optional | If the file has web location, fill this with url of that web location. |
-| volumeId | bigint | optional | If the file has volume id, fill this with it. or if file doesn't have a volume id, fill this with BigInt(0). This is required when you try to make file id of photo/thumbnail. |
-| localId | number | optional | If the file has local id, fill this with it. or if file doesn't have a local id, fill this with 0. This is required when you try to make file id of photo/thumbnail. |
-| secret | bigint | optional | The secret key from file, if file doesn't have a secret key fill this with BigInt(0). This is required when you try to make ThumbnailSource.LEGACY |
-| chatId | bigint | optional | If you want to make a file id of photo profil, fill this with BigInt of chatId. |
-| chatAccessHash | bigint | optional | If you want to make a file id of photo profil, fill this with BigInt of accessHash that chat, or BigInt(0) it must be work when you doesn't have a accessHash of that chat. |
-| stickerSetId | bigint | optional | The id of that sticker set. |
-| stickerSetAccessHash | bigint | optional | The accessHash of that sticker set. BigInt(0) ot must be work when you doesn't have a accessHash of that sticker set. |  | thumbnailSource | enum/number of ThumbnailSource | optional | The enum/number of ThumbnailSource. recommended to use enum. |
-| thumbnailFileType | enum/number of FileType | optional | The enum/number of FileType. recommend to use enum. |
-| thumbnailSize | string | optional | The size of that thumbnail.<br/> see : https://core.telegram.org/api/files#image-thumbnail-types |
-| fileTypeUniqueId | enum/number of FileTypeUniqueId | optional | Only for generating uniqueFileId. <br/> The enum/number of FileTypeUniqueId. recommended to use enum. |
+| `version` | number | true | The major version of bot api file id. Usually is `4`. |
+| `subVersion` | number | true | The minor version of bot api file id. Usually same with tdlib version or `32`. |
+| `dcId` | number | true | The data center id, where that file is stored. |
+| `fileType` | enum/number of FileType | true | The enum/number of FileType. recommend to use enum. |
+| `id` | bigint | true | The id of file. |
+| `accessHash` | bigint | true | The hash to access that file. |
+| `fileRefference` | Buffer | optional | File reference of that file. |
+| `url` | string | optional | If the file has web location, fill this with url of that web location. |
+| `volumeId` | bigint | optional | If the file has volume id, fill this with it. or if file doesn't have a volume id, fill this with `BigInt(0)``. This is required when you try to make file id of photo/thumbnail. |
+| `localId` | number | optional | If the file has local id, fill this with it. or if file doesn't have a local id, fill this with `0`. This is required when you try to make file id of photo/thumbnail. |
+| `secret` | bigint | optional | The secret key from file, if file doesn't have a secret key fill this with `BigInt(0)`. This is required when you try to make `ThumbnailSource.LEGACY` |
+| `chatId` | bigint | optional | If you want to make a file id of photo profil, fill this with BigInt of chatId. |
+| `chatAccessHash` | bigint | optional | If you want to make a file id of photo profil, fill this with BigInt of accessHash that chat, or `BigInt(0)` it must be work when you doesn't have a accessHash of that chat. |
+| `stickerSetId` | bigint | optional | The id of that sticker set. |
+| `stickerSetAccessHash` | bigint | optional | The accessHash of that sticker set. `BigInt(0)`` ot must be work when you doesn't have a accessHash of that sticker set. | 
+| `thumbnailSource` | enum/number of ThumbnailSource | optional | The enum/number of ThumbnailSource. recommended to use enum. |
+| `thumbnailFileType` | enum/number of FileType | optional | The enum/number of FileType. recommend to use enum. |
+| `thumbnailSize` | string | optional | The size of that thumbnail.<br/> see : https://core.telegram.org/api/files#image-thumbnail-types |
+| `fileTypeUniqueId` | enum/number of FileTypeUniqueId | optional | Only for generating uniqueFileId. <br/> The enum/number of FileTypeUniqueId. recommended to use enum. |
 
 ### Enums
 
