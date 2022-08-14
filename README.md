@@ -29,36 +29,6 @@ Another framework it should be can using this framework, **not only a tgsnake**.
 
   > We just tester for decoding file id from that framework, nvm work for re-sending the documents, but you can try. should be work too..
 
-## FAQ
-
-- **This framework is support for browser?**  
-  Sorry, we only support for nodejs, for browser support, may you will installing some dependencies for supporting `Buffer` class in browser.
-- **I use typescript with another BigInt framework, and i got a error, what should i do?**
-
-Try to pass type of that BigInt framework when you create a new Class.
-
-```typescript
-// example we have another framework for bigint like this :
-class myBigInt {
-  int!: bigint;
-  constructor(int: string | number) {
-    this.int = BigInt(int);
-  }
-  // this way only work when that bigint framework have a toString function.
-  toString() {
-    return String(this.int);
-  }
-}
-// then, we use it maybe like this :
-const int = new myBigInt(100);
-
-const fileId = new FileId<myBigInt>({
-  id: int,
-});
-```
-
-Or, you can convert that bigint number using `BigInt` (not using another framework).
-
 ## Installation
 
 Installing this framework with npm
@@ -79,8 +49,7 @@ Installing this framework with yarn
 
 ```javascript
 const { FileId, FileType, ThumbnailSource, FileTypeUniqueId } = require('@tgsnake/fileid');
-const fileId = new FileId();
-const raw = fileId.decodeFileId(
+const raw = FileId.decodeFileId(
   'CAACAgUAAxkBAAICjWKI4c8Zg7eo6bSbtAV_bVcFa9DmAAJ3BgACuNvZV0cotKoi35kTHgQ'
 );
 console.log(fileId);
@@ -191,7 +160,7 @@ for generating file id, you can use `.encodeFileId` method. And for decoding usi
 
 ```javascript
 const { FileId, FileType, ThumbnailSource, FileTypeUniqueId } = require("@tgsnake/fileid")
-const fileId = new FileId({
+const fileId = FileId.encodeFileId({
   version : 4,
   subVersion : 32,
   fileType : FileType.STICKER,
@@ -200,18 +169,17 @@ const fileId = new FileId({
   fileReference : , // fill this with document fileReference
   dcId : // fill this with document dcId
   // fill with another options.
-}).encodeFileId() // the return is class FileId, so you can use other method in single line.
-// for decode will return new class of FileId, so it will different with parent class.
+})
 console.log(fileId)
 ```
 
 ### Generating file id and uniqueFileId
 
-for generating unique file id, you can use `.encodeUniqueFileId` method. And for decoding using `decodeUniqueFileId` method.
+for generating only unique file id, you can use `.encodeUniqueId` method. And for decoding using `decodeUniqueId` method.
 
 ```javascript
 const { FileId, FileType, ThumbnailSource, FileTypeUniqueId } = require("@tgsnake/fileid")
-const fileId = new FileId({
+const fileId = FileId.encode({
   version : 4,
   subVersion : 32,
   fileType : FileType.STICKER,
@@ -221,8 +189,7 @@ const fileId = new FileId({
   fileReference : , // fill this with document fileReference
   dcId : // fill this with document dcId
   // fill with another options.
-}).encodeFileId().encodeUniqueFileId() // the return is class FileId, so you can use other method in single line.
-// for decode will return new class of FileId, so it will different with parent class.
+})
 console.log(fileId)
 ```
 
