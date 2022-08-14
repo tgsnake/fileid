@@ -1,10 +1,12 @@
-// Tgsnake - Telegram MTProto framework developed based on gram.js.
-// Copyright (C) 2022 Butthx <https://github.com/butthx>
-//
-// This file is part of Tgsnake
-//
-// Tgsnake is a free software : you can redistribute it and/or modify
-//  it under the terms of the MIT License as published.
+/**
+ * tgsnake - Telegram MTProto framework for nodejs.
+ * Copyright (C) 2022 butthx <https://github.com/butthx>
+ *
+ * THIS FILE IS PART OF TGSNAKE
+ *
+ * tgsnake is a free software : you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+ */
 
 export {
   FileType,
@@ -17,5 +19,8 @@ export {
   Writer,
   Reader,
   PHOTO_TYPES,
+  Options,
 } from './utils';
-export { FileId, FileIdOption } from './parser';
+export { FileId } from './parser';
+export { Encode } from './encode';
+export { Decode } from './decode';
