@@ -1,10 +1,12 @@
-// Tgsnake - Telegram MTProto framework developed based on gram.js.
-// Copyright (C) 2022 Butthx <https://github.com/butthx>
-//
-// This file is part of Tgsnake
-//
-// Tgsnake is a free software : you can redistribute it and/or modify
-//  it under the terms of the MIT License as published.
+/**
+ * tgsnake - Telegram MTProto framework for nodejs.
+ * Copyright (C) 2022 butthx <https://github.com/butthx>
+ *
+ * THIS FILE IS PART OF TGSNAKE
+ *
+ * tgsnake is a free software : you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+ */
 
 export enum FileType {
   THUMBNAIL = 0,
@@ -51,6 +53,110 @@ export const PHOTO_TYPES = [
   FileType.WALLPAPER,
   FileType.ENCRYPTED_THUMBNAIL,
 ];
+export interface Options {
+  /**
+   * The major version of bot api file id. Usually is 4.
+   */
+  version: number;
+  /**
+   * The minor version of bot api file id. Usually same with tdlib version or 32.
+   */
+  subVersion: number;
+  /**
+   * The data center id, where that file is stored.
+   */
+  dcId: number;
+  /**
+   * The enum/number of FileType. recommend to use enum.
+   * ```ts
+   * import { FileType, FileId } from "@tgsnake/fileid"
+   * const fileId = FileId.encode({
+   *  fileType : FileType.PHOTO
+   * })
+   * ```
+   */
+  fileType: FileType;
+  /**
+   * The id of file.
+   */
+  id: bigint;
+  /**
+   * The hash to access that file.
+   */
+  accessHash: bigint;
+  /**
+   * File reference of that file.
+   */
+  fileRefference?: Buffer;
+  /**
+   * If the file has web location, fill this with url of that web location.
+   */
+  url?: string;
+  /**
+   * If the file has volume id, fill this with it. or if file doesn't have a volume id, fill this with BigInt(0). This is required when you try to make file id of photo/thumbnail.
+   */
+  volumeId?: bigint;
+  /**
+   * If the file has local id, fill this with it. or if file doesn't have a local id, fill this with 0. This is required when you try to make file id of photo/thumbnail.
+   */
+  localId?: number;
+  /**
+   * The secret key from file, if file doesn't have a secret key fill this with BigInt(0). This is required when you try to make ThumbnailSource.LEGACY
+   */
+  secret?: bigint;
+  /**
+   * If you want to make a file id of photo profil, fill this with BigInt of chatId.
+   */
+  chatId?: bigint;
+  /**
+   * If you want to make a file id of photo profil, fill this with BigInt of accessHash that chat, or BigInt(0) it must be work when you doesn't have a accessHash of that chat.
+   */
+  chatAccessHash?: bigint;
+  /**
+   * The id of that sticker set.
+   */
+  stickerSetId?: bigint;
+  /**
+   * The accessHash of that sticker set. BigInt(0) ot must be work when you doesn't have a accessHash of that sticker set.
+   */
+  stickerSetAccessHash?: bigint;
+  /**
+   * The enum/number of ThumbnailSource. recommended to use enum.
+   * ```ts
+   * import { FileId, ThumbnailSource } from "@tgsnake/fileid"
+   * const fileId = FileId.encode({
+   *  thumbnailSource : ThumbnailSource.DOCUMENT
+   * })
+   * ```
+   */
+  thumbnailSource?: ThumbnailSource;
+  /**
+   * The enum/number of FileType. recommend to use enum.
+   * ```ts
+   * import { FileType, FileId } from "@tgsnake/fileid"
+   * const fileId = FileId.encode({
+   *  thumbnailFileType : FileType.PHOTO
+   * })
+   * ```
+   */
+  thumbnailFileType?: FileType;
+  /**
+   * The size of that thumbnail.
+   * see : https://core.telegram.org/api/files#image-thumbnail-types
+   */
+  thumbnailSize?: string;
+  /**
+   * Only for generating uniqueFileId.
+   * The enum/number of FileTypeUniqueId. recommended to use enum.
+   * ```ts
+   * import { FileTypeUniqueId, FileId } from "@tgsnake/fileid"
+   * const fileId = FileId.encode({
+   *  fileType : FileTypeUniqueId.PHOTO
+   * })
+   * ```
+   */
+  fileTypeUniqueId?: FileTypeUniqueId;
+}
 export function base64_url_encode(base: string | Buffer): string {
   return typeof base === 'string'
     ? Buffer.from(base).toString('base64url')
@@ -114,11 +220,7 @@ export class Writer {
     return this;
   }
   writeBigInt(int: bigint): Writer {
-    if (int < BigInt(0)) {
-      this.buffer.writeBigInt64LE(int, this.cur);
-    } else {
-      this.buffer.writeBigUInt64LE(int, this.cur);
-    }
+    this.buffer = Buffer.concat([this.buffer, packLong(int)]);
     this.cur += 8;
     return this;
   }
@@ -165,12 +267,12 @@ export class Reader {
     return res;
   }
   readBigInt(): bigint {
-    let res = BigInt(0);
-    try {
-      res = this.buffer.readBigUInt64LE(this.cur);
-    } catch (error) {
-      res = this.buffer.readBigInt64LE(this.cur);
-    }
+    let res = BigInt(
+      `0x${this.buffer
+        .slice(this.cur, this.cur + 8)
+        .reverse()
+        .toString('hex')}`
+    );
     this.cur += 8;
     return res;
   }
@@ -194,5 +296,19 @@ export class Reader {
     );
     if (padding > 0) this.cur += 4 - padding;
     return data;
+  }
+}
+
+function packLong(long: bigint, little: boolean = true, signed: boolean = false) {
+  const bytes = Buffer.alloc(8);
+  const shift = BigInt((1 << 16) * (1 << 16));
+  if (signed) {
+    bytes.writeInt32LE(Number(String(long % shift)), 0);
+    bytes.writeInt32LE(Number(String(long / shift)), 4);
+    return little ? bytes.reverse() : bytes;
+  } else {
+    bytes.writeUInt32LE(Number(String(long % shift)), 0);
+    bytes.writeUInt32LE(Number(String(long / shift)), 4);
+    return little ? bytes.reverse() : bytes;
   }
 }
