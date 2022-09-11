@@ -28,7 +28,8 @@
   "repository": "https://github.com/tgsnake/fileid",
   "author": "butthx",
   "files": [
-    "lib/**/**"
+    "lib/**/**",
+    "src"
   ],
   "license": "MIT",
   "engineStrict": true,
