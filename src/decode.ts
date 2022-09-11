@@ -53,7 +53,7 @@ export class Decode implements Options {
   /**
    * File reference of that file.
    */
-  fileRefference?: Buffer;
+  fileReference?: Buffer;
   /**
    * If the file has web location, fill this with url of that web location.
    */
@@ -129,7 +129,7 @@ export class Decode implements Options {
     fileType,
     id,
     accessHash,
-    fileRefference,
+    fileReference,
     url,
     volumeId,
     localId,
@@ -149,10 +149,10 @@ export class Decode implements Options {
     this.fileType = fileType;
     this.id = id;
     this.accessHash = accessHash;
-    this.fileRefference = fileRefference;
+    this.fileReference = fileReference;
     this.url = url;
-    this.volumeId = volumeId;
-    this.localId = localId;
+    this.volumeId = volumeId ?? BigInt(0);
+    this.localId = localId ?? 0;
     this.secret = secret;
     this.chatId = chatId;
     this.chatAccessHash = chatAccessHash;
@@ -172,7 +172,7 @@ export class Decode implements Options {
     let fileType = reader.readInt();
     const dcId = reader.readInt();
     const hasWebLocation = Boolean(fileType & FileType.WEB_LOCATION_FLAG);
-    const hasFileRefference = Boolean(fileType & FileType.FILE_REFERENCE_FLAG);
+    const hasFileReference = Boolean(fileType & FileType.FILE_REFERENCE_FLAG);
     fileType &= ~FileType.WEB_LOCATION_FLAG;
     fileType &= ~FileType.FILE_REFERENCE_FLAG;
     const FileTypes = Object.values(FileType).filter((v) => typeof v === 'number');
@@ -194,7 +194,7 @@ export class Decode implements Options {
       obj.accessHash = reader.readBigInt();
       return new Decode(obj);
     }
-    if (hasFileRefference) obj.fileRefference = reader.readBuffer();
+    if (hasFileReference ) obj.fileReference = reader.readBuffer();
     obj.id = reader.readBigInt();
     obj.accessHash = reader.readBigInt();
     if (PHOTO_TYPES.includes(fileType)) {

@@ -70,7 +70,7 @@ This options is using for generating unique file id or file id. Pass this option
 | `fileType` | enum/number of FileType | true | The enum/number of FileType. recommend to use enum. |
 | `id` | bigint | true | The id of file. |
 | `accessHash` | bigint | true | The hash to access that file. |
-| `fileRefference` | Buffer | optional | File reference of that file. |
+| `fileReference` | Buffer | optional | File reference of that file. |
 | `url` | string | optional | If the file has web location, fill this with url of that web location. |
 | `volumeId` | bigint | optional | If the file has volume id, fill this with it. or if file doesn't have a volume id, fill this with `BigInt(0)``. This is required when you try to make file id of photo/thumbnail. |
 | `localId` | number | optional | If the file has local id, fill this with it. or if file doesn't have a local id, fill this with `0`. This is required when you try to make file id of photo/thumbnail. |

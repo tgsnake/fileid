@@ -87,7 +87,7 @@ export interface Options {
   /**
    * File reference of that file.
    */
-  fileRefference?: Buffer;
+  fileReference?: Buffer;
   /**
    * If the file has web location, fill this with url of that web location.
    */

@@ -53,7 +53,7 @@ export class Encode {
     });
   }
   static fileId(file: Options | Decode): string {
-    if (file.fileRefference) {
+    if (file.fileReference) {
       file.fileType |= FileType.FILE_REFERENCE_FLAG;
     }
     if (file.url) {
@@ -64,8 +64,8 @@ export class Encode {
     if (file.url) {
       writer.writeString(file.url!);
     }
-    if (file.fileRefference) {
-      writer.writeBuffer(file.fileRefference!);
+    if (file.fileReference) {
+      writer.writeBuffer(file.fileReference!);
     }
     writer.writeBigInt(BigInt(String(file.id))).writeBigInt(BigInt(String(file.accessHash)));
     if (PHOTO_TYPES.includes(file.fileType)) {
