@@ -19,6 +19,7 @@ export {
   Writer,
   Reader,
   PHOTO_TYPES,
+  DOCUMENT_TYPES,
   Options,
 } from './utils';
 export { FileId } from './parser';

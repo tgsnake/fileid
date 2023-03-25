@@ -17,6 +17,7 @@ import {
   Writer,
   Reader,
   PHOTO_TYPES,
+  DOCUMENT_TYPES,
   Options,
 } from './';
 import type { Decode } from './decode';
@@ -53,14 +54,15 @@ export class Encode {
     });
   }
   static fileId(file: Options | Decode): string {
+    let fileType = file.fileType;
     if (file.fileReference) {
-      file.fileType |= FileType.FILE_REFERENCE_FLAG;
+      fileType |= FileType.FILE_REFERENCE_FLAG;
     }
     if (file.url) {
-      file.fileType |= FileType.WEB_LOCATION_FLAG;
+      fileType |= FileType.WEB_LOCATION_FLAG;
     }
-    const writer = new Writer(file.url ? Buffer.byteLength(file.url!, 'utf8') + 32 : 100);
-    writer.writeInt(Number(file.fileType)).writeInt(Number(file.dcId));
+    const writer = new Writer();
+    writer.writeInt(Number(fileType)).writeInt(Number(file.dcId));
     if (file.url) {
       writer.writeString(file.url!);
     }
@@ -96,27 +98,30 @@ export class Encode {
         default:
           throw new Error(`unknown encoder for thumbnailSource ${file.thumbnailSource}`);
       }
+    } else if (DOCUMENT_TYPES.includes(fileType)) {
+      writer.writeInt(file.version);
+      writer.writeInt(file.subVersion);
     }
     return base64_url_encode(
-      Buffer.concat([rle_encode(writer.results()), Buffer.from([file.subVersion, file.subVersion])])
+      rle_encode(Buffer.concat([writer.results(), Buffer.from([file.subVersion, file.version])]))
     );
   }
   static uniqueId(file: Options | Decode): string {
     let writer: Writer;
     switch (file.fileTypeUniqueId) {
       case FileTypeUniqueId.WEB:
-        writer = new Writer(Buffer.byteLength(file.url!, 'utf8') + 8);
+        writer = new Writer();
         writer.writeInt(Number(file.fileTypeUniqueId)).writeString(String(file.url));
         break;
       case FileTypeUniqueId.PHOTO:
-        writer = new Writer(16);
+        writer = new Writer();
         writer
           .writeInt(Number(file.fileTypeUniqueId))
           .writeBigInt(BigInt(String(file.volumeId)))
           .writeInt(Number(file.localId));
         break;
       case FileTypeUniqueId.DOCUMENT:
-        writer = new Writer(12);
+        writer = new Writer();
         writer.writeInt(Number(file.fileTypeUniqueId)).writeBigInt(BigInt(String(file.id)));
         break;
       default:

@@ -112,3 +112,6 @@ dist
 
 # build
 lib/**
+#testing directories
+./tes/**
+./test/**

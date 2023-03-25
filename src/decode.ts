@@ -194,7 +194,7 @@ export class Decode implements Options {
       obj.accessHash = reader.readBigInt();
       return new Decode(obj);
     }
-    if (hasFileReference ) obj.fileReference = reader.readBuffer();
+    if (hasFileReference) obj.fileReference = reader.readBuffer();
     obj.id = reader.readBigInt();
     obj.accessHash = reader.readBigInt();
     if (PHOTO_TYPES.includes(fileType)) {

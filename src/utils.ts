@@ -53,6 +53,21 @@ export const PHOTO_TYPES = [
   FileType.WALLPAPER,
   FileType.ENCRYPTED_THUMBNAIL,
 ];
+export const DOCUMENT_TYPES = [
+  FileType.VOICE,
+  FileType.VIDEO,
+  FileType.DOCUMENT,
+  FileType.ENCRYPTED,
+  FileType.TEMP,
+  FileType.STICKER,
+  FileType.AUDIO,
+  FileType.ANIMATION,
+  FileType.VIDEO_NOTE,
+  FileType.SECURE_RAW,
+  FileType.SECURE,
+  FileType.BACKGROUND,
+  FileType.DOCUMENT_AS_FILE,
+];
 export interface Options {
   /**
    * The major version of bot api file id. Usually is 4.
@@ -183,7 +198,8 @@ export function rle_encode(base: string | Buffer): Buffer {
   if (n) {
     r.push(0, n);
   }
-  return Buffer.from(r);
+  const res = Buffer.from(r);
+  return res;
 }
 export function rle_decode(base: string | Buffer): Buffer {
   let buffer: Buffer = typeof base === 'string' ? Buffer.from(base) : base;
@@ -207,21 +223,17 @@ export function rle_decode(base: string | Buffer): Buffer {
 }
 export class Writer {
   private buffer!: Buffer;
-  private start!: number;
-  private cur!: number;
-  constructor(alloc: number) {
-    this.buffer = Buffer.alloc(alloc);
-    this.start = 0;
-    this.cur = this.start;
+  constructor() {
+    this.buffer = Buffer.alloc(0);
   }
   writeInt(int: number): Writer {
-    this.buffer.writeInt32LE(int, this.cur);
-    this.cur += 4;
+    const buf = Buffer.alloc(4);
+    buf.writeInt32LE(int);
+    this.buffer = Buffer.concat([this.buffer, buf]);
     return this;
   }
   writeBigInt(int: bigint): Writer {
-    this.buffer = Buffer.concat([this.buffer, packLong(int)]);
-    this.cur += 8;
+    this.buffer = Buffer.concat([this.buffer, packLong(BigInt.asUintN(64, int))]);
     return this;
   }
   writeString(str: string): Writer {
@@ -229,27 +241,24 @@ export class Writer {
   }
   writeBuffer(buffer: Buffer): Writer {
     const length = buffer.length;
-    let padding;
+    let buf = Buffer.alloc(0);
     if (length <= 253) {
-      this.buffer[this.cur++] = buffer.length;
-      padding = (length + 1) % 4;
+      buf = Buffer.concat([Buffer.from([length]), buffer, Buffer.alloc(mod(-(length + 1), 4))]);
     } else {
-      this.buffer[this.cur++] = 254;
-      this.buffer[this.cur++] = buffer.length & 0xff;
-      this.buffer[this.cur++] = (buffer.length >> 8) & 0xff;
-      this.buffer[this.cur++] = (buffer.length >> 16) & 0xff;
-      padding = length % 4;
+      buf = Buffer.concat([
+        Buffer.from([254]),
+        Buffer.from([length & 0xff]),
+        Buffer.from([(length >> 8) & 0xff]),
+        Buffer.from([(length >> 16) & 0xff]),
+        buffer,
+        Buffer.alloc(mod(-length, 4)),
+      ]);
     }
-    buffer.copy(this.buffer, this.cur);
-    this.cur += buffer.length;
-    if (padding > 0) {
-      padding = 4 - padding;
-      while (padding--) this.buffer[this.cur++] = 0;
-    }
+    this.buffer = Buffer.concat([this.buffer, buf]);
     return this;
   }
   results(): Buffer {
-    return this.buffer.slice(0, this.cur);
+    return this.buffer;
   }
 }
 export class Reader {
@@ -266,7 +275,7 @@ export class Reader {
     this.cur += 4;
     return res;
   }
-  readBigInt(): bigint {
+  readBigInt(signed: boolean = true): bigint {
     let res = BigInt(
       `0x${this.buffer
         .slice(this.cur, this.cur + 8)
@@ -274,7 +283,7 @@ export class Reader {
         .toString('hex')}`
     );
     this.cur += 8;
-    return res;
+    return BigInt.asIntN(64, res);
   }
   readString(): string {
     return this.readBuffer().toString('utf8');
@@ -285,10 +294,10 @@ export class Reader {
     if (firstBuff === 254) {
       length =
         this.buffer[this.cur++] | (this.buffer[this.cur++] << 8) | (this.buffer[this.cur++] << 16);
-      padding = length % 4;
+      padding = mod(-length, 4);
     } else {
       length = firstBuff;
-      padding = (length + 1) % 4;
+      padding = mod(-(length + 1), 4);
     }
     const data = this.buffer.slice(
       this.cur,
@@ -305,10 +314,14 @@ function packLong(long: bigint, little: boolean = true, signed: boolean = false)
   if (signed) {
     bytes.writeInt32LE(Number(String(long % shift)), 0);
     bytes.writeInt32LE(Number(String(long / shift)), 4);
-    return little ? bytes.reverse() : bytes;
+    return little ? bytes : bytes.reverse();
   } else {
     bytes.writeUInt32LE(Number(String(long % shift)), 0);
     bytes.writeUInt32LE(Number(String(long / shift)), 4);
-    return little ? bytes.reverse() : bytes;
+    return little ? bytes : bytes.reverse();
   }
+}
+// https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+export function mod(n: number, m: number): number {
+  return ((n % m) + m) % m;
 }

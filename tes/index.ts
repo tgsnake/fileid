@@ -9,9 +9,29 @@
  */
 
 import { FileId } from '../src';
-
-const file = FileId.decodeFileId(
-  'CAACAgUAAxkBAAIC82L4hsBPQiPQjtkuqmPUHUedC8zqAALkAwAC2iu4VUBhx3SHETeyHgQ'
+const file = FileId.decodeFileId('AQADBQADZq8xG6uF-FQAEAIAAyGEcyoBAANi-pbYnH388wAEIAQ');
+console.log(
+  file,
+  FileId.encodeFileId(file),
+  FileId.encodeFileId({
+    version: 4,
+    subVersion: 32,
+    dcId: 5,
+    fileType: 1,
+    id: BigInt('6122790663352332134'),
+    accessHash: BigInt(0),
+    fileReference: undefined,
+    url: undefined,
+    volumeId: BigInt(0),
+    localId: 0,
+    secret: undefined,
+    chatId: BigInt('5007180833'),
+    chatAccessHash: BigInt('-865678915759834526'),
+    stickerSetId: undefined,
+    stickerSetAccessHash: undefined,
+    thumbnailSource: 2,
+    thumbnailFileType: undefined,
+    thumbnailSize: undefined,
+    fileTypeUniqueId: undefined,
+  })
 );
-console.log(file);
-console.log(FileId.encodeFileId(file));
