@@ -19,8 +19,9 @@ import {
   PHOTO_TYPES,
   DOCUMENT_TYPES,
   Options,
-} from './';
-import type { Decode } from './decode';
+} from './index.ts';
+import { Buffer } from 'node:buffer';
+import type { Decode } from './decode.ts';
 
 export class Encode {
   /**

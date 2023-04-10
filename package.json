@@ -1,20 +1,18 @@
 {
   "name": "@tgsnake/fileid",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "core framework for tgsnake for generating file id",
   "main": "./lib/index.js",
   "devDependencies": {
     "@types/node": "18.15.8",
-    "prettier": "2.8.7",
-    "ts-node": "10.9.1",
-    "typescript": "5.0.2"
+    "deno2node": "1.8.1",
+    "prettier": "2.8.7"
   },
   "scripts": {
     "start": "node tes/index.js",
-    "build": "tsc",
+    "build": "deno2node tsconfig.json",
     "build:license": "node ./generator/license",
-    "dev": "ts-node tes/index.ts",
-    "prepare": "tsc",
+    "prepare": "deno2node tsconfig.json",
     "prettier": "prettier -w ."
   },
   "homepage": "https://tgsnake.js.org",

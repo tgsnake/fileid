@@ -20,8 +20,8 @@ export {
   Reader,
   PHOTO_TYPES,
   DOCUMENT_TYPES,
-  Options,
-} from './utils';
-export { FileId } from './parser';
-export { Encode } from './encode';
-export { Decode } from './decode';
+  type Options,
+} from './utils.ts';
+export { FileId } from './parser.ts';
+export { Encode } from './encode.ts';
+export { Decode } from './decode.ts';

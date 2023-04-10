@@ -7,9 +7,10 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Decode } from './decode';
-import { Encode } from './encode';
-import { Options } from './utils';
+import { Decode } from './decode.ts';
+import { Encode } from './encode.ts';
+import { Options } from './utils.ts';
+import { Buffer } from 'node:buffer';
 
 export namespace FileId {
   /**

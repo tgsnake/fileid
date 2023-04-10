@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { FileId } from '../src/index.ts';
+const { FileId } = require('../lib');
 const file = FileId.decodeFileId('AQADBQADZq8xG6uF-FQAEAIAAyGEcyoBAANi-pbYnH388wAEIAQ');
 console.log(
   'AQADBQADZq8xG6uF-FQAEAIAAyGEcyoBAANi-pbYnH388wAEIAQ',

@@ -7,6 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+import { Buffer } from 'node:buffer';
 
 export enum FileType {
   THUMBNAIL = 0,
@@ -178,7 +179,16 @@ export function base64_url_encode(base: string | Buffer): string {
     : base.toString('base64url');
 }
 export function base64_url_decode(base: string | Buffer): Buffer {
-  return typeof base === 'string' ? Buffer.from(base, 'base64url') : base;
+  return typeof base === 'string' ? Buffer.from(base64urlTobase64(base), 'base64') : base;
+}
+export function base64urlTobase64(text: string): string {
+  const pad = text.length % 4;
+  if (pad === 1) {
+    throw new Error('Invalid base64url');
+  }
+  return (pad === 2 || pad === 3 ? text.padEnd(4 - pad, '=') : text)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
 }
 export function rle_encode(base: string | Buffer): Buffer {
   let buffer: Buffer = typeof base === 'string' ? Buffer.from(base) : base;

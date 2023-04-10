@@ -17,8 +17,8 @@ import {
   Reader,
   PHOTO_TYPES,
   Options,
-} from './';
-
+} from './index.ts';
+import { Buffer } from 'node:buffer';
 export class Decode implements Options {
   /**
    * The major version of bot api file id. Usually is 4.
